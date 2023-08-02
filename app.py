@@ -47,6 +47,44 @@ def search(query):
 search("what is meta's thread product?")
 
 # 2. Tool for scraping
+def scrape_website(objective: str, url: str):
+    # scrape website, and also will summarize the content based on objective if the content is too large
+    # objective is the original objective & task that user give to the agent, url is the url of the website to be scraped
 
+    print("Scrapping Website...")
+
+    # Define the headers of the request
+    headers = {
+        'Cache-Control': 'no-cache',
+        'Content-Type' : 'application/json',         
+    }
+
+    # Define the data to be sent in the request
+    data = {
+        "url" : url
+    }
+
+    # Convert the python object to a json string
+    data_json = json.dumps(data)
+
+    # Send the post request
+    post_url = f"https://chrome.browserless.io/content?token={browserless_api_key}"
+    response = requests.post(post_url, headers=headers, data=data_json)
+
+    # Check the response status code
+    if response.status_code == 200: 
+        soup = BeautifulSoup(response.content, "html.parser")
+        text = soup.get_text()
+        print("Content:", text)
+
+        if len(text) > 10000:
+            output = summary(objective, text)
+            return output
+        else:
+            return text 
+    else:
+        print(f"Http request failed with status code: {response.status_code}")
+
+    
 
 # 3. Create a langchain agent with tools above

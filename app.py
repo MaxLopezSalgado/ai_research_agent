@@ -72,7 +72,7 @@ def scrape_website(objective: str, url: str):
     response = requests.post(post_url, headers=headers, data=data_json)
 
     # Check the response status code
-    if response.status_code = 200 
+    if response.status_code == 200: 
         soup = BeautifulSoup(response.content, "html.parser")
         text = soup.get_text()
         print("Content:", text)

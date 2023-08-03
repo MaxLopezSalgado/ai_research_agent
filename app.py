@@ -197,7 +197,8 @@ class Query(Basemodel):
 def ResearchAgent(query: Query):
     query = query.query
     content = agent({"Input": query})
-    return content
+    actual_content = content["output"]
+    return actual_content
 
 
 

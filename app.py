@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 
 from langchain import PromptTemplate
+from langchain.agents import Tool
 from langchain.agents import initialize_agent, tool
 from langchain.agents import  AgentType
 from langchain.chat_models import ChatOpenAI
@@ -49,7 +50,7 @@ search("what is meta's thread product?")
 # 2. Tool for scraping
 def scrape_website(objective: str, url: str):
     # scrape website, and also will summarize the content based on objective if the content is too large
-    # objective is the original objective & task that user give to the agent, url is the url of the website to be scraped
+    # objective is the original objective and task that user give to the agent, url is the url of the website to be scraped
 
     print("Scrapping Website...")
 
@@ -114,7 +115,7 @@ def summary(objective, content):
     return output
 
 class ScrapeWebsiteInput(BaseModel):
-    objective: str = Field(Description= "The objective & taks that the user give to the agent")
+    objective: str = Field(Description= "The objective and taks that the user give to the agent")
     url: str = Field(description= "The url of the webseite to be scraped")
 
 class ScrapeWebsiteTool(BaseTool):
@@ -129,3 +130,43 @@ class ScrapeWebsiteTool(BaseTool):
         raise NotImplementedError("error here")
 
 # 3. Create a langchain agent with tools above
+tools = [
+    Tool(
+        name="Search",
+        func=search,
+        description="useful for when you need to answer questions about current events, data. You should ask targeted questions"
+    ),
+    ScrapeWebsiteTool(),
+]
+
+system_message = SystemMessage(
+    content="""You are a world class researcher, who can do detailed research on any topic and produce facts based results; 
+            you do not make things up, you will try as hard as possible to gather facts and data to back up the research
+            
+            Please make sure you complete the objective above with the following rules:
+            1/ You should do enough research to gather as much information as possible about the objective
+            2/ If there are url of relevant links and articles, you will scrape it to gather more information
+            3/ After scraping and search, you should think "is there any new things i should search and scraping based on the data I collected to increase research quality?" If answer is yes, continue; But don't do this more than 3 iteratins
+            4/ You should not make things up, you should only write facts and data that you have gathered
+            5/ In the final output, You should include all reference data and links to back up your research; You should include all reference data and links to back up your research
+            6/ In the final output, You should include all reference data and links to back up your research; You should include all reference data and links to back up your research"""
+)
+agent_kwargs = {
+    "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
+    "system_message": system_message,
+}
+
+llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k-0613")
+
+memory = ConversationSummaryBufferMemory(
+    memory_key="memory", return_messages=True, llm=llm, max_token_limit=1000)
+
+agent = initialize_agent(
+    tools,
+    llm,
+    agent = AgentType.OPENAI_FUNCTIONS,
+    Verbose= True,
+    agent_kwargs = agent_kwargs,
+    memory = memory,
+)
+

@@ -103,7 +103,7 @@ def summary(objective, content):
     """
 
     map_prompt_template = PromptTemplate(
-        template = map_prompt, imput_variables=["text", "objective"])
+        template = map_prompt, input_variables=["text", "objective"])
     
     summary_chain = load_summarize_chain(
         llm = llm,
@@ -112,11 +112,12 @@ def summary(objective, content):
         verbose = True
     )
 
-    output = summary_chain.run(imput_documents= docs, objective= objective)
+    output = summary_chain.run(input_documents= docs, objective= objective)
 
     return output
 
 class ScrapeWebsiteInput(BaseModel):
+    """Inputs for scrape_website"""
     objective: str = Field(Description= "The objective and taks that the user give to the agent")
     url: str = Field(description= "The url of the webseite to be scraped")
 

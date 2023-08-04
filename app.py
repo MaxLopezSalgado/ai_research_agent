@@ -196,7 +196,7 @@ app = FastAPI()
 class Query(BaseModel):
     query: str
 
-@app.post("/Get")
+@app.post("/")
 def ResearchAgent(query: Query):
     query = query.query
     content = agent({"Input": query})

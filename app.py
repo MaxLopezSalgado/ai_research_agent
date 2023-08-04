@@ -203,5 +203,9 @@ def ResearchAgent(query: Query):
     actual_content = content["output"]
     return actual_content
 
+@app.get("/")
+def get_data():
+    return {"message": "Hello World"}
+
 
 

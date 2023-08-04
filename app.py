@@ -18,7 +18,9 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import streamlit as st
-from langchain.schema import SystemMessage   
+from langchain.schema import SystemMessage
+from fastapi import FastAPI
+
 
 
 load_dotenv()
@@ -190,7 +192,7 @@ agent = initialize_agent(
 # 5. Set this as an API endpoint via FastAPI
 app = FastAPI()
 
-class Query(Basemodel):
+class Query(BaseModel):
     query: str
 
 @app.post("/")

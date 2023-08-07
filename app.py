@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 from langchain import PromptTemplate
 from langchain.agents import Tool
-from langchain.agents import initialize_agent, tool
+from langchain.agents import initialize_agent
 from langchain.agents import  AgentType
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import MessagesPlaceholder
@@ -46,8 +46,6 @@ def search(query):
     print(response.text)
 
     return response.text
-
-search("what is meta's thread product?")
 
 # 2. Tool for scraping
 def scrape_website(objective: str, url: str):
@@ -107,6 +105,7 @@ def summary(objective, content):
     
     summary_chain = load_summarize_chain(
         llm = llm,
+        chain_type='map_reduce',
         chain_type = map_prompt_template,
         combine_prompt = map_prompt_template, 
         verbose = True

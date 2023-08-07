@@ -105,8 +105,8 @@ def summary(objective, content):
     
     summary_chain = load_summarize_chain(
         llm = llm,
-        chain_type='map_reduce',
-        chain_type = map_prompt_template,
+        chain_type="map_reduce",
+        map_prompt=map_prompt_template,
         combine_prompt = map_prompt_template, 
         verbose = True
     )

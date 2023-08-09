@@ -19,7 +19,7 @@ import requests
 import json
 import streamlit as st
 from langchain.schema import SystemMessage
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 
 
@@ -195,11 +195,11 @@ app = FastAPI()
 class Query(BaseModel):
     query: str
 
-@app.route('/', methods=["GET", "POST"])
-def ResearchAgent(query: Query):
+@app.post("/")
+def researchAgent(query: Query):
     query = query.query
     content = agent({"input": query})
-    actual_content = content["output"]
+    actual_content = content['output']
     return actual_content
 
 

@@ -2,9 +2,14 @@ import requests
 
 print(
     requests.post(
-        "http://localhost:8000/docs",
+        "https://ai-research-agent-deploy.onrender.com",
         json={
             "query": "what is meta's new product thread?"
         }
     ).json()
 )
+
+
+
+
+

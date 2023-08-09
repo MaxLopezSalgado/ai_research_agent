@@ -2,7 +2,7 @@ import requests
 
 print(
     requests.post(
-        "https://ai-research-agent-deploy.onrender.com",
+        "https://0.0.0.0:1000/research",
         json={
             "query": "what is meta's new product thread?"
         }
